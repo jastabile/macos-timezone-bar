@@ -1,28 +1,72 @@
 # TimeZoneBar
 
-A macOS menu bar app for comparing time zones. Each zone has its own 24-hour slider. All rows
-share one reference instant, so dragging any slider moves every other row to the matching
-time in its own zone.
+**"If it's 9 AM in Tokyo, what time is it for everyone else?"** Drag one slider and see the
+answer for every zone at once, right from the macOS menu bar.
 
-![Tokyo set to 09:00](docs/screenshots/05-tokyo-0900.png)
+![macOS 13+](https://img.shields.io/badge/macOS-13%2B-blue)
+![Swift](https://img.shields.io/badge/Swift-SwiftUI-orange)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Dependencies: none](https://img.shields.io/badge/dependencies-none-lightgrey)
 
-- Menu-bar-only (`LSUIElement`): no Dock icon and no main window. Click the clock in the menu bar.
-- Add zones with a search picker that covers every `TimeZone.knownTimeZoneIdentifiers` entry.
-  You can search by city ("Tokyo", "New York", "Montevideo", "sao paulo"), region, identifier
-  or abbreviation ("PST", "CET", "JST", "IST").
-- Remove a zone with the ⊖ button or the row's context menu. Reorder by dragging a row (the
-  context menu also has Move Up / Move Down). The local system zone is added on first launch and
-  carries a **Local** badge.
-- Each row shows the city, UTC offset (`UTC+5:45`), abbreviation (`JST`, `CEST`; left out when
-  the zone only has a numeric name), the time in large text, the date, and a `+1 day` / `−1 day`
-  tag when that zone is on a different calendar day than the local zone.
-- Sliders snap to 15-minute steps. The track is shaded for night (22:00–07:00) and working hours
-  (09:00–18:00), so you can see which zones are inside working hours at the chosen time.
-- **Now** returns to the live time. When live, the panel shows "Live" and the times tick every
-  minute. When you have picked another time, the panel shows how far it is from now in orange,
-  for example "+3h 15m from now".
-- 12h/24h toggle and a **Quit** button.
-- The zone list, its order and the 12h/24h choice persist across restarts (UserDefaults).
+TimeZoneBar is a small, native, free menu bar app for people who work across time zones:
+remote teams, people scheduling calls with family abroad, and anyone who has ever done
+"they're 5h ahead... no wait, they changed their clocks last week" in their head.
+
+<p align="center">
+  <img src="docs/screenshots/05-tokyo-0900.png" width="420" alt="Tokyo set to 09:00 and every other zone following">
+</p>
+
+## Why another time zone app?
+
+Most world clocks show you *now*. Planning a meeting needs *then*. In TimeZoneBar every zone has
+its own 24-hour slider, and all of them share a single moment in time. Drag Tokyo to 09:00 and
+London, New York and the rest jump to the matching time, with a `+1 day` / `−1 day` tag when
+they land on another date. Green shading marks working hours (09:00–18:00) and purple marks the
+night, so the slot where everyone is awake is easy to spot.
+
+## Features
+
+- **One shared moment.** Drag the slider in any row and every other row follows. Sliders snap
+  to 15 minutes.
+- **Correct in the hard cases.** All math goes through Apple's `Calendar`/`TimeZone` APIs, so
+  DST and odd offsets work: India (UTC+5:30), Nepal (UTC+5:45), Chatham Islands (UTC+12:45), and
+  the weeks when the US and Europe have changed their clocks but the other hasn't.
+- **Search that understands people.** Type a city ("Tokyo", "New York", "Montevideo",
+  "sao paulo") or an abbreviation ("PST", "CET", "JST", "IST"). All ~440 system time zones are
+  included.
+- **Useful at a glance.** Each row shows the city, UTC offset, abbreviation (JST, CEST...), a
+  big clock, the date, and the day difference from your local zone.
+- **Now button.** Jump back to the live time. While you look at another time, the header shows
+  how far it is from now, for example "+3h 15m from now".
+- Add, remove and drag to reorder zones. Your local zone is added on first launch and marked
+  **Local**. 12h/24h toggle. Your list is remembered across restarts.
+- **Menu bar only.** No Dock icon and no window to manage. Native SwiftUI, no third-party
+  dependencies, no network access, no tracking.
+
+<p align="center">
+  <img src="docs/screenshots/10-light.png" width="380" alt="Light mode">
+  <img src="docs/screenshots/10-dark.png" width="380" alt="Dark mode">
+</p>
+<p align="center">
+  <img src="docs/screenshots/03-search-Tokyo.png" width="380" alt="Search by city">
+  <img src="docs/screenshots/03-search-PST.png" width="380" alt="Search by abbreviation">
+</p>
+
+## Download
+
+Get the latest `TimeZoneBar.zip` from
+[Releases](https://github.com/jastabile/macos-timezone-bar/releases), unzip it and move
+`TimeZoneBar.app` to `/Applications`.
+
+The app is ad-hoc signed, not notarized by Apple, so macOS blocks the first launch. To open it,
+right-click the app → **Open** → **Open**, or run:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/TimeZoneBar.app
+```
+
+You can also build it yourself in about a minute (see below). It needs only Apple's free
+Command Line Tools.
 
 ## Requirements
 
@@ -177,6 +221,15 @@ scripts/ui-test.py                end-to-end UI test
 scripts/uitest/axctl.swift        Accessibility helper used by the UI test
 docs/screenshots/                 screenshots from the UI test run
 ```
+
+## Contributing
+
+Issues and pull requests are welcome. Please run `scripts/test.sh` (and, if you touch the UI,
+`python3 scripts/ui-test.py`) before opening a PR.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
 
 ## Known limitations and notes
 
