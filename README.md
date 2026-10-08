@@ -56,7 +56,8 @@ night, so the slot where everyone is awake is easy to spot.
 
 Get the latest `TimeZoneBar.zip` from
 [Releases](https://github.com/jastabile/macos-timezone-bar/releases), unzip it and move
-`TimeZoneBar.app` to `/Applications`.
+`TimeZoneBar.app` to `/Applications`. The download is built for Apple silicon; on an Intel Mac,
+build it from source.
 
 The app is ad-hoc signed, not notarized by Apple, so macOS blocks the first launch. To open it,
 right-click the app → **Open** → **Open**, or run:
